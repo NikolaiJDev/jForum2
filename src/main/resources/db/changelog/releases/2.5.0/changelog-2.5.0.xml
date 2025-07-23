@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- JForum 2.5.0 Upgrade Changelog -->
+    <!-- Migration from version 2.4.1 to 2.5.0 -->
+    
+    <changeSet id="jforum-2.5.0-01-widen-ip-fields-for-ipv6" author="jforum">
+        <comment>Widen IP address fields to accommodate IPv6 addresses (50 characters)</comment>
+        
+        <modifyDataType tableName="jforum_posts" columnName="poster_ip" newDataType="VARCHAR(50)"/>
+        <modifyDataType tableName="jforum_privmsgs" columnName="privmsgs_ip" newDataType="VARCHAR(50)"/>
+        <modifyDataType tableName="jforum_banlist" columnName="banlist_ip" newDataType="VARCHAR(50)"/>
+        <modifyDataType tableName="jforum_sessions" columnName="session_ip" newDataType="VARCHAR(50)"/>
+        <modifyDataType tableName="jforum_vote_voters" columnName="vote_user_ip" newDataType="VARCHAR(50)"/>
+        
+        <rollback>
+            <modifyDataType tableName="jforum_posts" columnName="poster_ip" newDataType="VARCHAR(15)"/>
+            <modifyDataType tableName="jforum_privmsgs" columnName="privmsgs_ip" newDataType="VARCHAR(15)"/>
+            <modifyDataType tableName="jforum_banlist" columnName="banlist_ip" newDataType="VARCHAR(15)"/>
+            <modifyDataType tableName="jforum_sessions" columnName="session_ip" newDataType="VARCHAR(15)"/>
+            <modifyDataType tableName="jforum_vote_voters" columnName="vote_user_ip" newDataType="VARCHAR(15)"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

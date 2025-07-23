@@ -288,6 +288,11 @@
 			<artifactId>prettytime</artifactId>
 			<version>5.0.9.Final</version>
 		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>4.29.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -389,6 +394,43 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.21.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>4.29.2</version>
+				<configuration>
+					<propertyFile>src/main/resources/liquibase.properties</propertyFile>
+					<changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
+					<outputChangeLogFile>target/liquibase-outputChangeLog.xml</outputChangeLogFile>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.mysql</groupId>
+						<artifactId>mysql-connector-j</artifactId>
+						<version>9.3.0</version>
+					</dependency>
+					<dependency>
+						<groupId>org.postgresql</groupId>
+						<artifactId>postgresql</artifactId>
+						<version>42.7.5</version>
+					</dependency>
+					<dependency>
+						<groupId>org.hsqldb</groupId>
+						<artifactId>hsqldb</artifactId>
+						<version>2.7.4</version>
+					</dependency>
+					<dependency>
+						<groupId>com.oracle.database.jdbc</groupId>
+						<artifactId>ojdbc11</artifactId>
+						<version>23.8.0.25.04</version>
+					</dependency>
+					<dependency>
+						<groupId>com.microsoft.sqlserver</groupId>
+						<artifactId>mssql-jdbc</artifactId>
+						<version>12.10.0.jre11</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- JForum 2.3.5 Upgrade Changelog -->
+    <!-- TODO: Convert from original SQL files -->
+    
+    <changeSet id="jforum-2.3.5-placeholder" author="jforum">
+        <comment>Placeholder for 2.3.5 changes - convert from upgrade/2.3.5/*.sql files</comment>
+        <sql>-- This changeset is a placeholder. Please convert the SQL files in upgrade/2.3.5/ directory</sql>
+    </changeSet>
+
+</databaseChangeLog>

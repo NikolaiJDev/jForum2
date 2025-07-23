@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- JForum 2.1 Upgrade Changelog -->
+    <!-- Migration from version 2.0.2 to 2.1 -->
+    
+    <changeSet id="jforum-2.1-01-update-categories-display-order" author="jforum">
+        <comment>Set display_order to categories_id for all categories</comment>
+        <sql>UPDATE jforum_categories SET display_order = categories_id</sql>
+        <rollback>
+            <comment>Cannot rollback this data change automatically</comment>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-02-add-user-karma-column" author="jforum">
+        <comment>Add karma column to users table</comment>
+        <addColumn tableName="jforum_users">
+            <column name="user_karma" type="DECIMAL(10,2)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="jforum_users" columnName="user_karma"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-03-add-posts-columns" author="jforum">
+        <comment>Add attachment and moderation columns to posts table</comment>
+        <addColumn tableName="jforum_posts">
+            <column name="attach" type="TINYINT(1)" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+            <column name="need_moderate" type="TINYINT(1)" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="jforum_posts" columnName="attach"/>
+            <dropColumn tableName="jforum_posts" columnName="need_moderate"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-04-add-categories-moderated-column" author="jforum">
+        <comment>Add moderated column to categories table</comment>
+        <addColumn tableName="jforum_categories">
+            <column name="moderated" type="TINYINT(1)" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="jforum_categories" columnName="moderated"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-05-modify-forums-moderated-column" author="jforum">
+        <comment>Modify moderated column in forums table to have default value</comment>
+        <addDefaultValue tableName="jforum_forums" columnName="moderated" defaultValueNumeric="0"/>
+        <rollback>
+            <dropDefaultValue tableName="jforum_forums" columnName="moderated"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-06-modify-topics-moderated-column" author="jforum">
+        <comment>Modify moderated column in topics table to have default value</comment>
+        <addDefaultValue tableName="jforum_topics" columnName="moderated" defaultValueNumeric="0"/>
+        <rollback>
+            <dropDefaultValue tableName="jforum_topics" columnName="moderated"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-07-modify-search-topics-title" author="jforum">
+        <comment>Expand topic_title length in search_topics table</comment>
+        <modifyDataType tableName="jforum_search_topics" columnName="topic_title" newDataType="VARCHAR(100)"/>
+        <rollback>
+            <modifyDataType tableName="jforum_search_topics" columnName="topic_title" newDataType="VARCHAR(60)"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-08-create-karma-table" author="jforum">
+        <comment>Create karma table for post rating system</comment>
+        <createTable tableName="jforum_karma">
+            <column name="karma_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="post_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="topic_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="from_user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="points" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_date" type="DATETIME">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="jforum_karma"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-09-create-karma-indexes" author="jforum">
+        <comment>Create indexes on karma table</comment>
+        <createIndex tableName="jforum_karma" indexName="idx_karma_post_id">
+            <column name="post_id"/>
+        </createIndex>
+        <createIndex tableName="jforum_karma" indexName="idx_karma_topic_id">
+            <column name="topic_id"/>
+        </createIndex>
+        <createIndex tableName="jforum_karma" indexName="idx_karma_post_user_id">
+            <column name="post_user_id"/>
+        </createIndex>
+        <createIndex tableName="jforum_karma" indexName="idx_karma_from_user_id">
+            <column name="from_user_id"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="jforum_karma" indexName="idx_karma_post_id"/>
+            <dropIndex tableName="jforum_karma" indexName="idx_karma_topic_id"/>
+            <dropIndex tableName="jforum_karma" indexName="idx_karma_post_user_id"/>
+            <dropIndex tableName="jforum_karma" indexName="idx_karma_from_user_id"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-10-create-bookmarks-table" author="jforum">
+        <comment>Create bookmarks table for user bookmarks</comment>
+        <createTable tableName="jforum_bookmarks">
+            <column name="bookmark_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="relation_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="relation_type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="public_visible" type="INT" defaultValueNumeric="1">
+                <constraints nullable="true"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="jforum_bookmarks"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1-11-create-bookmarks-indexes" author="jforum">
+        <comment>Create indexes on bookmarks table</comment>
+        <createIndex tableName="jforum_bookmarks" indexName="book_idx_relation">
+            <column name="relation_id"/>
+        </createIndex>
+        <createIndex tableName="jforum_bookmarks" indexName="idx_bookmarks_user_id">
+            <column name="user_id"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="jforum_bookmarks" indexName="book_idx_relation"/>
+            <dropIndex tableName="jforum_bookmarks" indexName="idx_bookmarks_user_id"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

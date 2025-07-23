@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- JForum 2.8.0 Upgrade Changelog -->
+    <!-- Migration from version 2.7.0 to 2.8.0 -->
+    
+    <changeSet id="jforum-2.8.0-01-create-registrations-table" author="jforum">
+        <comment>Create jforum_registrations table for email-based registrations</comment>
+        <createTable tableName="jforum_registrations">
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <rollback>
+            <dropTable tableName="jforum_registrations"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.8.0-02-add-registrations-foreign-key" author="jforum">
+        <comment>Add foreign key constraint from registrations to groups table</comment>
+        <addForeignKeyConstraint 
+            baseTableName="jforum_registrations" 
+            baseColumnNames="group_id"
+            constraintName="fk_registrations_group_id"
+            referencedTableName="jforum_groups"
+            referencedColumnNames="group_id"/>
+        
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="jforum_registrations" constraintName="fk_registrations_group_id"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.8.0-03-widen-banner-name-field" author="jforum">
+        <comment>Widen banner name field for long entries</comment>
+        <modifyDataType tableName="jforum_banner" columnName="banner_name" newDataType="VARCHAR(1024)"/>
+        <rollback>
+            <modifyDataType tableName="jforum_banner" columnName="banner_name" newDataType="VARCHAR(255)"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
