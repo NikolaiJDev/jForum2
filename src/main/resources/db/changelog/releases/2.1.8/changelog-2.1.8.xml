@@ -6,11 +6,168 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <!-- JForum 2.1.8 Upgrade Changelog -->
-    <!-- TODO: Convert from original SQL files -->
+    <!-- Migration from version 2.1.7 to 2.1.8 -->
     
-    <changeSet id="jforum-2.1.8-placeholder" author="jforum">
-        <comment>Placeholder for 2.1.8 changes - convert from upgrade/2.1.8/*.sql files</comment>
-        <sql>-- This changeset is a placeholder. Please convert the SQL files in upgrade/2.1.8/ directory</sql>
+    <changeSet id="jforum-2.1.8-01-add-banlist-email-index" author="jforum">
+        <comment>Add index on banlist_email for faster lookups</comment>
+        <createIndex tableName="jforum_banlist" indexName="idx_banlist_email">
+            <column name="banlist_email"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="jforum_banlist" indexName="idx_banlist_email"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-02-add-posts-moderation-index" author="jforum">
+        <comment>Add index on need_moderate column for moderation workflows</comment>
+        <createIndex tableName="jforum_posts" indexName="idx_posts_moderate">
+            <column name="need_moderate"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="jforum_posts" indexName="idx_posts_moderate"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-03-add-posts-time-index" author="jforum">
+        <comment>Add index on post_time for chronological queries</comment>
+        <createIndex tableName="jforum_posts" indexName="idx_posts_time">
+            <column name="post_time"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="jforum_posts" indexName="idx_posts_time"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-04-add-topic-moved-id-column" author="jforum">
+        <comment>Add topic_moved_id column for topic move tracking</comment>
+        <addColumn tableName="jforum_topics">
+            <column name="topic_moved_id" type="INT" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="jforum_topics" columnName="topic_moved_id"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-05-add-topic-moved-index" author="jforum">
+        <comment>Add index on topic_moved_id for moved topic lookups</comment>
+        <createIndex tableName="jforum_topics" indexName="idx_topics_moved">
+            <column name="topic_moved_id"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="jforum_topics" indexName="idx_topics_moved"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-06-modify-users-rank-id-default" author="jforum">
+        <comment>Set default value for rank_id column in users table</comment>
+        <addDefaultValue tableName="jforum_users" columnName="rank_id" defaultValueNumeric="0"/>
+        <rollback>
+            <dropDefaultValue tableName="jforum_users" columnName="rank_id"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-07-modify-sessions-ip-default" author="jforum">
+        <comment>Set default value for session_ip column in sessions table</comment>
+        <addDefaultValue tableName="jforum_sessions" columnName="session_ip" defaultValue=""/>
+        <rollback>
+            <dropDefaultValue tableName="jforum_sessions" columnName="session_ip"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-08-add-vote-indexes" author="jforum">
+        <comment>Add indexes for vote-related tables for better performance</comment>
+        <createIndex tableName="jforum_vote_desc" indexName="idx_vote_desc_topic_id">
+            <column name="topic_id"/>
+        </createIndex>
+        <createIndex tableName="jforum_vote_results" indexName="idx_vote_results_vote_id">
+            <column name="vote_id"/>
+        </createIndex>
+        <createIndex tableName="jforum_vote_voters" indexName="idx_vote_voters_vote_id">
+            <column name="vote_id"/>
+        </createIndex>
+        <createIndex tableName="jforum_vote_voters" indexName="idx_vote_voters_user_id">
+            <column name="vote_user_id"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="jforum_vote_desc" indexName="idx_vote_desc_topic_id"/>
+            <dropIndex tableName="jforum_vote_results" indexName="idx_vote_results_vote_id"/>
+            <dropIndex tableName="jforum_vote_voters" indexName="idx_vote_voters_vote_id"/>
+            <dropIndex tableName="jforum_vote_voters" indexName="idx_vote_voters_user_id"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-09-add-extensions-index" author="jforum">
+        <comment>Add index on extensions table for file extension lookups</comment>
+        <createIndex tableName="jforum_extensions" indexName="idx_extensions_extension">
+            <column name="extension"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="jforum_extensions" indexName="idx_extensions_extension"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-10-drop-search-tables" author="jforum">
+        <comment>Drop obsolete search-related tables</comment>
+        <dropTable tableName="jforum_search_words"/>
+        <dropTable tableName="jforum_search_wordmatch"/>
+        <dropTable tableName="jforum_search_results"/>
+        <dropTable tableName="jforum_search_topics"/>
+        
+        <rollback>
+            <comment>Search tables cannot be automatically restored - manual recreation required</comment>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-11-create-moderation-log-table" author="jforum">
+        <comment>Create moderation log table for tracking moderation actions</comment>
+        <createTable tableName="jforum_moderation_log">
+            <column name="log_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="log_description" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="log_original_message" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="log_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="log_type" type="TINYINT" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+            <column name="post_id" type="INT" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+            <column name="topic_id" type="INT" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+            <column name="post_user_id" type="INT" defaultValueNumeric="0">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="jforum_moderation_log"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.1.8-12-add-moderation-log-indexes" author="jforum">
+        <comment>Add indexes on moderation log table for efficient queries</comment>
+        <createIndex tableName="jforum_moderation_log" indexName="idx_moderation_log_user_id">
+            <column name="user_id"/>
+        </createIndex>
+        <createIndex tableName="jforum_moderation_log" indexName="idx_moderation_log_post_user_id">
+            <column name="post_user_id"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="jforum_moderation_log" indexName="idx_moderation_log_user_id"/>
+            <dropIndex tableName="jforum_moderation_log" indexName="idx_moderation_log_post_user_id"/>
+        </rollback>
     </changeSet>
 
 </databaseChangeLog>
