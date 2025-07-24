@@ -26,6 +26,9 @@ src/main/resources/
     └── changelog/
         ├── db.changelog-master.xml                 # Master changelog file
         └── releases/                               # Version-specific changelogs
+            ├── baseline/                           # Initial schema creation
+            │   ├── changelog-baseline.xml
+            │   └── README.md
             ├── 2.1/
             │   └── changelog-2.1.xml
             ├── 2.3.2/
@@ -102,10 +105,32 @@ liquibase --changeLogFile=src/main/resources/db/changelog/db.changelog-master.xm
           status
 ```
 
+## Migration Flow
+
+The Liquibase migration follows this sequence:
+
+1. **Baseline Schema Creation** - Creates the initial database schema (all core tables and indexes)
+2. **Version 2.1** - Applies 2.1 upgrades on top of baseline
+3. **Version 2.1.5** - Applies 2.1.5 upgrades
+4. **Version 2.1.7** - Applies 2.1.7 upgrades
+5. **Version 2.1.8** - Applies 2.1.8 upgrades
+6. **Version 2.2.0** - Applies 2.2.0 upgrades
+7. **Version 2.3.2** - Applies 2.3.2 upgrades
+8. **Version 2.3.5** - Applies 2.3.5 upgrades
+9. **Version 2.4.0** - Applies 2.4.0 upgrades
+10. **Version 2.4.1** - Applies 2.4.1 upgrades
+11. **Version 2.5.0** - Applies 2.5.0 upgrades
+12. **Version 2.7.0** - Applies 2.7.0 upgrades
+13. **Version 2.8.0** - Applies 2.8.0 upgrades
+
 ## Migration Status
 
 ### Completed Conversions
 The following versions have been fully converted to Liquibase:
+
+- **Baseline (Initial Schema)**: ✅ Partial (core tables created)
+  - jforum_banlist, jforum_categories, jforum_config, jforum_forums
+  - **Note**: Additional tables need to be converted from the original schema files
 
 - **2.1 (from 2.0.2)**: ✅ Complete
   - Table creation (karma, bookmarks, quota_limit, extensions, etc.)

@@ -14,6 +14,9 @@
     <!-- JForum Database Migration Changelog Master File -->
     <!-- This file replaces the SQL-based upgrade scripts with Liquibase changesets -->
     
+    <!-- Baseline Schema Creation (Initial State) -->
+    <include file="db/changelog/releases/baseline/changelog-baseline.xml"/>
+    
     <!-- Version 2.1 Upgrades (from 2.0.2) -->
     <include file="db/changelog/releases/2.1/changelog-2.1.xml"/>
     
