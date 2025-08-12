@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- JForum 2.3.2 Upgrade Changelog -->
+    <!-- Migration from version 2.3.1 to 2.3.2 -->
+    
+    <changeSet id="jforum-2.3.2-01-enlarge-mimetype-column" author="jforum">
+        <comment>Enlarge mimetype column in jforum_attach_desc to accommodate longer MIME types</comment>
+        <modifyDataType tableName="jforum_attach_desc" columnName="mimetype" newDataType="VARCHAR(85)"/>
+        <rollback>
+            <modifyDataType tableName="jforum_attach_desc" columnName="mimetype" newDataType="VARCHAR(50)"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

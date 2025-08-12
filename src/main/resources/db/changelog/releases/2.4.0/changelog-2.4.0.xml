@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- JForum 2.4.0 Upgrade Changelog -->
+    <!-- Migration from version 2.3.5 to 2.4.0 -->
+    
+    <changeSet id="jforum-2.4.0-01-create-spam-table" author="jforum">
+        <comment>Create jforum_spam table for spam pattern management</comment>
+        <createTable tableName="jforum_spam">
+            <column name="pattern" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <rollback>
+            <dropTable tableName="jforum_spam"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.4.0-02-enlarge-topic-title" author="jforum">
+        <comment>Increase topic title length to 120 characters</comment>
+        <modifyDataType tableName="jforum_topics" columnName="topic_title" newDataType="VARCHAR(120)"/>
+        <rollback>
+            <modifyDataType tableName="jforum_topics" columnName="topic_title" newDataType="VARCHAR(100)"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.4.0-03-enlarge-post-subject" author="jforum">
+        <comment>Increase post subject length to 130 characters</comment>
+        <modifyDataType tableName="jforum_posts_text" columnName="post_subject" newDataType="VARCHAR(130)"/>
+        <rollback>
+            <modifyDataType tableName="jforum_posts_text" columnName="post_subject" newDataType="VARCHAR(100)"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.4.0-04-enlarge-user-password" author="jforum">
+        <comment>Increase user password field length for more secure hash algorithms</comment>
+        <modifyDataType tableName="jforum_users" columnName="user_password" newDataType="VARCHAR(128)"/>
+        <rollback>
+            <modifyDataType tableName="jforum_users" columnName="user_password" newDataType="VARCHAR(64)"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.4.0-05-enlarge-user-avatar" author="jforum">
+        <comment>Increase user avatar URL field length for external URLs</comment>
+        <modifyDataType tableName="jforum_users" columnName="user_avatar" newDataType="VARCHAR(255)"/>
+        <rollback>
+            <modifyDataType tableName="jforum_users" columnName="user_avatar" newDataType="VARCHAR(100)"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

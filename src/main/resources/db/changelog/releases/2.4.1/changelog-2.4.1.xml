@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- JForum 2.4.1 Upgrade Changelog -->
+    <!-- Migration from version 2.4.0 to 2.4.1 -->
+    
+    <changeSet id="jforum-2.4.1-01-drop-obsolete-user-columns" author="jforum">
+        <comment>Remove obsolete gender and themes_id columns from users table</comment>
+        <dropColumn tableName="jforum_users" columnName="gender"/>
+        <dropColumn tableName="jforum_users" columnName="themes_id"/>
+        
+        <rollback>
+            <addColumn tableName="jforum_users">
+                <column name="gender" type="VARCHAR(1)">
+                    <constraints nullable="true"/>
+                </column>
+                <column name="themes_id" type="INT">
+                    <constraints nullable="true"/>
+                </column>
+            </addColumn>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.4.1-02-drop-themes-table" author="jforum">
+        <comment>Drop obsolete themes table as theming system was removed</comment>
+        <dropTable tableName="jforum_themes"/>
+        
+        <rollback>
+            <comment>Themes table structure cannot be automatically restored - manual recreation required if needed</comment>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

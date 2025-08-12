@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- JForum Initial Database Schema - Baseline -->
+    <!-- This changeset creates the initial database schema equivalent to the base SQL scripts -->
+    
+    <changeSet id="baseline-001-create-banlist-table" author="jforum-migration">
+        <comment>Create jforum_banlist table</comment>
+        <createTable tableName="jforum_banlist">
+            <column name="banlist_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT"/>
+            <column name="banlist_ip" type="VARCHAR(50)"/>
+            <column name="banlist_email" type="VARCHAR(255)"/>
+        </createTable>
+        <createIndex tableName="jforum_banlist" indexName="idx_user">
+            <column name="user_id"/>
+        </createIndex>
+        <createIndex tableName="jforum_banlist" indexName="idx_banlist_ip">
+            <column name="banlist_ip"/>
+        </createIndex>
+        <createIndex tableName="jforum_banlist" indexName="idx_banlist_email">
+            <column name="banlist_email"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="baseline-002-create-categories-table" author="jforum-migration">
+        <comment>Create jforum_categories table</comment>
+        <createTable tableName="jforum_categories">
+            <column name="categories_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(100)" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+            <column name="display_order" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="moderated" type="TINYINT(1)" defaultValueNumeric="0"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="baseline-003-create-config-table" author="jforum-migration">
+        <comment>Create jforum_config table</comment>
+        <createTable tableName="jforum_config">
+            <column name="config_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="config_name" type="VARCHAR(255)" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+            <column name="config_value" type="VARCHAR(1000)" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="baseline-004-create-forums-table" author="jforum-migration">
+        <comment>Create jforum_forums table</comment>
+        <createTable tableName="jforum_forums">
+            <column name="forum_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="categories_id" type="INT" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="forum_name" type="VARCHAR(150)" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+            <column name="forum_desc" type="VARCHAR(255)"/>
+            <column name="forum_order" type="INT" defaultValueNumeric="1"/>
+            <column name="forum_topics" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="forum_last_post_id" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="moderated" type="TINYINT(1)" defaultValueNumeric="0"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Note: This is a partial baseline implementation for demonstration -->
+    <!-- The complete baseline would include all ~30 tables from the original schema -->
+    <!-- Additional tables should be added following the same pattern -->
+
+</databaseChangeLog>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext 
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/pro 
+    http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <!-- JForum Database Migration Changelog Master File -->
+    <!-- This file replaces the SQL-based upgrade scripts with Liquibase changesets -->
+    
+    <!-- Baseline Schema Creation (Initial State) -->
+    <include file="db/changelog/releases/baseline/changelog-baseline.xml"/>
+    
+    <!-- Version 2.1 Upgrades (from 2.0.2) -->
+    <include file="db/changelog/releases/2.1/changelog-2.1.xml"/>
+    
+    <!-- Version 2.1.5 Upgrades (from 2.1.4) -->
+    <include file="db/changelog/releases/2.1.5/changelog-2.1.5.xml"/>
+    
+    <!-- Version 2.1.7 Upgrades (from 2.1.5) -->
+    <include file="db/changelog/releases/2.1.7/changelog-2.1.7.xml"/>
+    
+    <!-- Version 2.1.8 Upgrades (from 2.1.7) -->
+    <include file="db/changelog/releases/2.1.8/changelog-2.1.8.xml"/>
+    
+    <!-- Version 2.2.0 Upgrades (from 2.1.8) -->
+    <include file="db/changelog/releases/2.2.0/changelog-2.2.0.xml"/>
+    
+    <!-- Version 2.3.2 Upgrades (from 2.3.1) -->
+    <include file="db/changelog/releases/2.3.2/changelog-2.3.2.xml"/>
+    
+    <!-- Version 2.3.5 Upgrades (from 2.3.2) -->
+    <include file="db/changelog/releases/2.3.5/changelog-2.3.5.xml"/>
+    
+    <!-- Version 2.4.0 Upgrades (from 2.3.5) -->
+    <include file="db/changelog/releases/2.4.0/changelog-2.4.0.xml"/>
+    
+    <!-- Version 2.4.1 Upgrades (from 2.4.0) -->
+    <include file="db/changelog/releases/2.4.1/changelog-2.4.1.xml"/>
+    
+    <!-- Version 2.5.0 Upgrades (from 2.4.1) -->
+    <include file="db/changelog/releases/2.5.0/changelog-2.5.0.xml"/>
+    
+    <!-- Version 2.7.0 Upgrades (from 2.6.2) -->
+    <include file="db/changelog/releases/2.7.0/changelog-2.7.0.xml"/>
+    
+    <!-- Version 2.8.0 Upgrades (from 2.7.0) -->
+    <include file="db/changelog/releases/2.8.0/changelog-2.8.0.xml"/>
+
+</databaseChangeLog>

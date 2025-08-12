@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- JForum 2.7.0 Upgrade Changelog -->
+    <!-- Migration from version 2.6.2 to 2.7.0 -->
+    
+    <changeSet id="jforum-2.7.0-01-add-skype-column" author="jforum">
+        <comment>Add Skype ID column to users table</comment>
+        <addColumn tableName="jforum_users">
+            <column name="user_skype" type="VARCHAR(50)" defaultValue="">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="jforum_users" columnName="user_skype"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.7.0-02-remove-obsolete-user-columns" author="jforum">
+        <comment>Remove obsolete instant messaging and visibility columns from users table</comment>
+        <dropColumn tableName="jforum_users" columnName="user_viewonline"/>
+        <dropColumn tableName="jforum_users" columnName="user_allow_viewonline"/>
+        <dropColumn tableName="jforum_users" columnName="user_aim"/>
+        <dropColumn tableName="jforum_users" columnName="user_yim"/>
+        <dropColumn tableName="jforum_users" columnName="user_msnm"/>
+        
+        <rollback>
+            <addColumn tableName="jforum_users">
+                <column name="user_viewonline" type="INT" defaultValueNumeric="1"/>
+                <column name="user_allow_viewonline" type="INT" defaultValueNumeric="1"/>
+                <column name="user_aim" type="VARCHAR(50)"/>
+                <column name="user_yim" type="VARCHAR(50)"/>
+                <column name="user_msnm" type="VARCHAR(50)"/>
+            </addColumn>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.7.0-03-widen-config-value-field" author="jforum">
+        <comment>Widen config value field for long entries</comment>
+        <modifyDataType tableName="jforum_config" columnName="config_value" newDataType="VARCHAR(1024)"/>
+        <rollback>
+            <modifyDataType tableName="jforum_config" columnName="config_value" newDataType="VARCHAR(255)"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="jforum-2.7.0-04-add-new-smilies" author="jforum">
+        <comment>Add new smilie emoticons</comment>
+        <insert tableName="jforum_smilies">
+            <column name="code" value=":beerchug:"/>
+            <column name="url" value="&lt;img src=&quot;#CONTEXT#/images/smilies/cc6690697b91b8cd32696ed6f361cbe4.gif&quot; alt=&quot;smilie&quot; /&gt;"/>
+            <column name="disk_name" value="cc6690697b91b8cd32696ed6f361cbe4.gif"/>
+        </insert>
+        <insert tableName="jforum_smilies">
+            <column name="code" value=":roflmao:"/>
+            <column name="url" value="&lt;img src=&quot;#CONTEXT#/images/smilies/3c27b0c44b9f840665edd9a2d24b57f3.gif&quot; alt=&quot;smilie&quot; /&gt;"/>
+            <column name="disk_name" value="3c27b0c44b9f840665edd9a2d24b57f3.gif"/>
+        </insert>
+        <insert tableName="jforum_smilies">
+            <column name="code" value=":jumping:"/>
+            <column name="url" value="&lt;img src=&quot;#CONTEXT#/images/smilies/a8bb6599aceabf44663433fc99ad1db0.gif&quot; alt=&quot;smilie&quot; /&gt;"/>
+            <column name="disk_name" value="a8bb6599aceabf44663433fc99ad1db0.gif"/>
+        </insert>
+        <insert tableName="jforum_smilies">
+            <column name="code" value=":banghead:"/>
+            <column name="url" value="&lt;img src=&quot;#CONTEXT#/images/smilies/973c8eb2b9dcd92cecf8187c64761ef6.gif&quot; alt=&quot;smilie&quot; /&gt;"/>
+            <column name="disk_name" value="973c8eb2b9dcd92cecf8187c64761ef6.gif"/>
+        </insert>
+        <insert tableName="jforum_smilies">
+            <column name="code" value=":censored:"/>
+            <column name="url" value="&lt;img src=&quot;#CONTEXT#/images/smilies/33dccaa5ed264b734370116faf09d1c8.gif&quot; alt=&quot;smilie&quot; /&gt;"/>
+            <column name="disk_name" value="33dccaa5ed264b734370116faf09d1c8.gif"/>
+        </insert>
+        <insert tableName="jforum_smilies">
+            <column name="code" value=":pissed:"/>
+            <column name="url" value="&lt;img src=&quot;#CONTEXT#/images/smilies/8c9fac5d3e7cba173210082669b0316e.gif&quot; alt=&quot;smilie&quot; /&gt;"/>
+            <column name="disk_name" value="8c9fac5d3e7cba173210082669b0316e.gif"/>
+        </insert>
+        <insert tableName="jforum_smilies">
+            <column name="code" value=":sleep:"/>
+            <column name="url" value="&lt;img src=&quot;#CONTEXT#/images/smilies/28f230537468150d34a2fb360c0d923f.gif&quot; alt=&quot;smilie&quot; /&gt;"/>
+            <column name="disk_name" value="28f230537468150d34a2fb360c0d923f.gif"/>
+        </insert>
+        <insert tableName="jforum_smilies">
+            <column name="code" value=":confused:"/>
+            <column name="url" value="&lt;img src=&quot;#CONTEXT#/images/smilies/4d5a6f04e1481e0c1c4ad7ef4957b4c8.gif&quot; alt=&quot;smilie&quot; /&gt;"/>
+            <column name="disk_name" value="4d5a6f04e1481e0c1c4ad7ef4957b4c8.gif"/>
+        </insert>
+        
+        <rollback>
+            <delete tableName="jforum_smilies">
+                <where>code IN (':beerchug:', ':roflmao:', ':jumping:', ':banghead:', ':censored:', ':pissed:', ':sleep:', ':confused:')</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
